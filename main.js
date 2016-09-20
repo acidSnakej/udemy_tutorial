@@ -1,31 +1,34 @@
+
 var game = new Phaser.Game(370, 550, Phaser.AUTO, 'block_game');
 var backgroundGame;
 var button;
 var flappy;
 var mainState = {
     
-    preload: function(){
+    preload: function () {
         // Load all recurses
-        game.load.image('background','img/bg.jpeg');
-        game.load.image('bird', 'img/pajaro1.png');
-        game.load.image('btn', 'img/btn.png');
+        "use strict";
+        game.load.image('background', 'img/bg.jpeg');
+        game.load.spritesheet('birds', 'img/pajaros.png', 43, 30); // depends of the dimension of image, for example this image is 129x30,                                                                       therefor 129/3 = 43, then the first bird appears. 30 is the value of Y
+
     },
 
-    create: function(){
+    create: function () {
         // Show all recurses
+        "use strict";
         backgroundGame = game.add.tileSprite(0, 0, 370, 550, 'background');
-        flappy = game.add.sprite(game.width/2, game.height/2, 'bird');
-        flappy.anchor.setTo(0.5);
-        flappy.scale.setTo(1) // change size of image
-        // button = game.add.sprite(game.width/2, game.height/2, 'btn'); // Image management
-        // button.anchor.setTo(0.5); // Change support point of image, where superior corner left
+        flappy = game.add.sprite(100, 100, 'birds');
+        flappy.frame = 1; // with this take the 3 images like a array, the second bird is the position 1 by default
+        flappy.animations.add('fly', [0, 1, 2], 10, true); // first argument name of animation, 
+                                                          // second argument array order position of animation
+                                                         // Thir argument speed of animation    
     },
 
-    update: function(){
+    update: function () {
+        "use strict";
         // Animate the game
-        backgroundGame.tilePosition.x -= 1;
-        flappy.angle += 0.2; // change the angle of image
-
+        flappy.animations.play('fly');
+      
     }
 
 };
