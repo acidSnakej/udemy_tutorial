@@ -3,7 +3,7 @@ var game = new Phaser.Game(370, 550, Phaser.AUTO, 'block_game');
 var backgroundGame;
 var button;
 var flappy;
-var rightKey;
+var cursors;
 var mainState = {
     
     preload: function () {
@@ -23,17 +23,31 @@ var mainState = {
         flappy.animations.add('fly', [0, 1, 2], 10, true); // first argument name of animation, 
                                                           // second argument array order position of animation
                                                          // Thir argument speed of animation
-        rightKey = game.input.keyboard.addKey(Phaser.Keyboard.RIGHT); // declare the input to move right
+        cursors = game.input.keyboard.createCursorKeys(); // create all cursors
     },
 
     update: function () {
         "use strict";
         // Animate the game
         flappy.animations.play('fly');
-        if(rightKey.isDown) // isUp is like the user dont push the key, therefor the image will move
+        if(cursors.right.isDown)
             {
-                flappy.position.x += 1; // move the image to right, if the number is negative go to left
+                flappy.position.x += 1;
             }
+        if(cursors.down.isDown)
+            {
+                flappy.position.y += 1;
+            }
+        if(cursors.left.isDown)
+            {
+                flappy.position.x -= 1;
+            }
+        if(cursors.up.isDown)
+            {
+                flappy.position.y -= 1;
+            }
+        backgroundGame.tilePosition.x -= 10;
+        
     }
 
 };
