@@ -34,7 +34,9 @@ var mainState = {
         bullets.setAll('anchor.y', 1); // From where is shooting
         bullets.setAll('outOfBoundsKill', true); // If the Bullet reach the limit of the world dies
         bullets.setAll('checkWorldBounds', true); // Verify where is the bullet
-        
+        game.physics.startSystem(Phaser.Physics.ARCADE);
+        game.physics.arcade.enable(ship);
+        ship.body.collideWorldBounds = true;
         
     },
 
