@@ -5,6 +5,7 @@ var button;
 var flappy;
 var cursors;
 var person;
+var looking = 'up';
 var mainState = {
     
     preload: function () {
@@ -32,7 +33,7 @@ var mainState = {
         flappy.body.collideWorldBounds = true; // limit of windows or world flappy cant advance.
         */
         person = game.add.sprite(game.width/2, game.height/2, 'persons');
-        person.anchor.setTo(0.5);
+        person.anchor.setTo(0.5, -2);
         person.animations.add('right', [27, 28, 29, 30, 31, 32, 33, 34, 35], 10, true); // depends the position the sprite to animate
         person.animations.add('up', [0, 1, 2, 3, 4, 5, 6, 7, 8], 10, true);
         person.animations.add('down', [18, 19, 20, 21, 23, 24, 25, 26], 10, true);
@@ -49,32 +50,60 @@ var mainState = {
         "use strict";
         // Animate the game
         //flappy.animations.play('fly');
+        
         if(cursors.right.isDown)
             {
                 person.animations.play('right');
                 person.position.x += 2;
+                backgroundGame.tilePosition.x -= 1;
+                if(looking != 'right')
+                {
+                    looking = 'right';
+                }
                 // flappy.position.x += 5;
             }
-        if(cursors.down.isDown)
+        else if(cursors.down.isDown)
             {
                 person.animations.play('down');
                 person.position.y += 2;
+                if(looking != 'down')
+                {
+                    looking = 'down';
+                }
                 // flappy.position.y += 5;
             }
-        if(cursors.left.isDown)
+        else if(cursors.left.isDown)
             {
                 person.animations.play('left');
                 person.position.x -= 2;
+                backgroundGame.tilePosition.x += 1;
+                if(looking != 'left')
+                {
+                    looking = 'left';
+                }
                 // flappy.position.x -= 5;
                 
             }
-        if(cursors.up.isDown)
+        else if(cursors.up.isDown)
             {
                 person.animations.play('up');
                 person.position.y -= 2;
+                if(looking != 'up')
+                {
+                    looking = 'up';
+                }
                 // flappy.position.y -= 5;
             }
-        backgroundGame.tilePosition.x -= 2;
+        else
+            {
+                if(looking != 'waiting')
+                {
+                    person.animations.stop();
+                    backgroundGame.tilePosition.x = 0;
+                }
+                looking = 'espera';
+            }
+        
         
         
     }
