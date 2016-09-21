@@ -1,4 +1,7 @@
 var ship;
+var bullets;
+var bulletTime = 400;
+var time_game = 0;
 var Game = {
     
     preload: function () {
@@ -16,10 +19,38 @@ var Game = {
         ship.anchor.setTo(0.5);
         game.physics.startSystem(Phaser.Physics.ARCADE);
         game.physics.arcade.enable(ship);
+        bullets = game.add.group();
+        bullets.enableBody = true;
+        bullets.physicsBodyType = Phaser.Physics.ARCADE; // Set the propieties of arcade
+        bullets.createMultiple(20, 'laser');
+        bullets.setAll('anchor.x', 0.5);
+        bullets.setAll('anchor.y', 0.5);
+        
+
     },
     
     update: function () {
         "use strict";
+         ship.rotation = game.physics.arcade.angleToPointer(ship) + Math.PI/2 // Aim with the cursor  with Math.PI/2
+         
+         if (game.input.activePointer.leftButton.isDown) {
+             this.shoot();
+        }
+    },
+    
+    shoot: function () {
+        
+        if (game.time.now > time_game && bullets.countDead() > 0) {
+            
+            time_game = game.time.now + bulletTime;
+            var bullet = bullets.getFirstDead();
+            bullet.anchor.setTo(0.5);
+            bullet.reset(ship.x, ship.y);
+            game.physics.arcade.moveToPointer(bullet, 200);
+            
+        }
+        
     }
+    
     
 };
