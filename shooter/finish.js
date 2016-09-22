@@ -7,7 +7,10 @@ var Finish = {
     
     create: function () {
         "use strict";
-        game.stage.background = "#900000"
+        game.stage.backgroundColor = "#990000";
+        if (confirm('¿Desea reiniciar el juego?')) {
+            game.state.start('Game');
+        }
     },
     
     update: function () {

@@ -8,6 +8,9 @@ var points;
 var textPoints;
 var lifes;
 var textLifes;
+var music;
+var cursors;
+var laser_shoot;
 var Game = {
     
     preload: function () {
@@ -16,16 +19,20 @@ var Game = {
         game.load.image('enemy', 'img/malo.png');
         game.load.image('ship', 'img/nave.png');
         game.load.image('laser', 'img/laser.png');
+        game.load.audio('example', ['audio/RoccoW_-_08_-_Sweet_Self_Satisfaction.mp3']);
+        game.load.audio('shoot_sound', ['audio/laser_shoot.wav']);
     },
     
     create: function () {
         "use strict";
+        music = game.add.audio('example');
+        music.play();
         game.add.tileSprite(0, 0, 400, 540, 'bg');
         ship = game.add.sprite(game.width/2, 490, 'ship');
         ship.anchor.setTo(0.5);
+        cursors = game.input.keyboard.createCursorKeys();
         game.physics.startSystem(Phaser.Physics.ARCADE);
         game.physics.arcade.enable(ship);
-        
         bullets = game.add.group();
         bullets.enableBody = true;
         bullets.physicsBodyType = Phaser.Physics.ARCADE; // Set the propieties of arcade
@@ -67,16 +74,27 @@ var Game = {
         
         enemies.forEachAlive (function (enemy) {
             if (enemy.position.y > 520 && enemy.position.y < 521){
+                enemy.kill();
                 lifes--;
                 textLifes.text = lifes;
             }
-        })
+        });
+        
+        if (cursors.left.isDown)
+            ship.position.x -= 1.5;
+        
+        if (cursors.right.isDown)
+            ship.position.x += 1.5;
+        
+        if (lifes == 0)
+            game.state.start('Finish');
     },
     
     shoot: function () {
         
         if (game.time.now > time_game && bullets.countDead() > 0) {
-            
+            laser_shoot = game.add.audio('shoot_sound');
+            laser_shoot.play();
             time_game = game.time.now + bulletTime;
             var bullet = bullets.getFirstDead();
             bullet.anchor.setTo(0.5);
