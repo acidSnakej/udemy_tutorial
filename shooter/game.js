@@ -22,9 +22,11 @@ var Game = {
         bullets = game.add.group();
         bullets.enableBody = true;
         bullets.physicsBodyType = Phaser.Physics.ARCADE; // Set the propieties of arcade
-        bullets.createMultiple(20, 'laser');
+        bullets.createMultiple(30, 'laser');
         bullets.setAll('anchor.x', 0.5);
         bullets.setAll('anchor.y', 0.5);
+        bullets.setAll('checkWorldBounds', true); // Make sure the ammo never goes to 0
+        bullets.setAll('outOfBoundsKill', true);
         
 
     },
@@ -46,7 +48,9 @@ var Game = {
             var bullet = bullets.getFirstDead();
             bullet.anchor.setTo(0.5);
             bullet.reset(ship.x, ship.y);
+            bullet.rotation = game.physics.arcade.angleToPointer(bullet) + Math.PI/2
             game.physics.arcade.moveToPointer(bullet, 200);
+            
             
         }
         
