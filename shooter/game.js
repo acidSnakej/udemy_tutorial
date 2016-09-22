@@ -63,7 +63,14 @@ var Game = {
              this.shoot();
         }
         
-        game.physics.arcade.overlap(bullets, enemies, this.collision, null, this);
+        game.physics.arcade.overlap(bullets, enemies, this.collision, null, this); // When the bullet and the enemy collision
+        
+        enemies.forEachAlive (function (enemy) {
+            if (enemy.position.y > 520 && enemy.position.y < 521){
+                lifes--;
+                textLifes.text = lifes;
+            }
+        })
     },
     
     shoot: function () {
