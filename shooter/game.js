@@ -4,6 +4,10 @@ var bulletTime = 400;
 var time_game = 0;
 var enemies;
 var timer;
+var points;
+var textPoints;
+var lifes;
+var textLifes;
 var Game = {
     
     preload: function () {
@@ -41,7 +45,14 @@ var Game = {
         enemies.setAll('outOfBoundsKill', true);
         
         timer = game.time.events.loop(2000, this.createEnemy, this);
-
+        
+        points = 0;
+        game.add.text(20, 20, 'Puntos: ', {font: '14px Arial', fill: '#FFF'});
+        textPoints = game.add.text(80, 20, '0', {font: '14px Arial', fill: '#FFF'});
+        
+        lifes = 3;
+        game.add.text(310, 20, 'Vidas: ', {font: '14px Arial', fill: '#FFF'});
+        textLifes = game.add.text(360, 20, '3', {font: '14px Arial', fill: '#FFF'});
     },
     
     update: function () {
@@ -83,6 +94,8 @@ var Game = {
     collision: function (bullets, enemies) {
         bullets.kill();
         enemies.kill();
+        points += 20;
+        textPoints.text = points;
     
     }
     
