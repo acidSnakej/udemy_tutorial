@@ -11,6 +11,7 @@ var textLifes;
 var music;
 var cursors;
 var laser_shoot;
+var explosion;
 var Game = {
     
     preload: function () {
@@ -21,11 +22,13 @@ var Game = {
         game.load.image('laser', 'img/laser.png');
         game.load.audio('example', ['audio/RoccoW_-_08_-_Sweet_Self_Satisfaction.mp3']);
         game.load.audio('shoot_sound', ['audio/laser_shoot.wav']);
+        game.load.audio('explosion', ['audio/explosion.wav']);
     },
     
     create: function () {
         "use strict";
         music = game.add.audio('example');
+        explosion = game.add.audio('explosion');
         music.play();
         game.add.tileSprite(0, 0, 400, 540, 'bg');
         ship = game.add.sprite(game.width/2, 490, 'ship');
@@ -119,6 +122,8 @@ var Game = {
     collision: function (bullets, enemies) {
         bullets.kill();
         enemies.kill();
+        
+        explosion.play();
         points += 20;
         textPoints.text = points;
     
