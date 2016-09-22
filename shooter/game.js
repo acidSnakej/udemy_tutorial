@@ -2,6 +2,8 @@ var ship;
 var bullets;
 var bulletTime = 400;
 var time_game = 0;
+var enemies;
+var timer;
 var Game = {
     
     preload: function () {
@@ -19,6 +21,7 @@ var Game = {
         ship.anchor.setTo(0.5);
         game.physics.startSystem(Phaser.Physics.ARCADE);
         game.physics.arcade.enable(ship);
+        
         bullets = game.add.group();
         bullets.enableBody = true;
         bullets.physicsBodyType = Phaser.Physics.ARCADE; // Set the propieties of arcade
@@ -28,6 +31,16 @@ var Game = {
         bullets.setAll('checkWorldBounds', true); // Make sure the ammo never goes to 0
         bullets.setAll('outOfBoundsKill', true);
         
+        enemies = game.add.group();
+        enemies.enableBody = true;
+        enemies.physicsBodyType = Phaser.Physics.ARCADE; // Set the propieties of arcade
+        enemies.createMultiple(30, 'enemy');
+        enemies.setAll('anchor.x', 0.5);
+        enemies.setAll('anchor.y', 0.5);
+        enemies.setAll('checkWorldBounds', true); // Make sure the ammo never goes to 0
+        enemies.setAll('outOfBoundsKill', true);
+        
+        timer = game.time.events.loop(2000, this.createEnemy, this);
 
     },
     
@@ -51,9 +64,18 @@ var Game = {
             bullet.rotation = game.physics.arcade.angleToPointer(bullet) + Math.PI/2
             game.physics.arcade.moveToPointer(bullet, 200);
             
-            
         }
         
+    },
+    
+    createEnemy: function () {
+        var enem = enemies.getFirstDead();
+        var num = Math.floor(Math.random()*10)+1;
+        enem.reset(num*39, 0);
+        enem.anchor.setTo(0.5);
+        enem.body.velocity.y = 100;
+        enem.checkWorldBounds = true;
+        enem.outOfBoundsKill = true;
     }
     
     
