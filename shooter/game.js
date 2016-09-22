@@ -51,6 +51,8 @@ var Game = {
          if (game.input.activePointer.leftButton.isDown) {
              this.shoot();
         }
+        
+        game.physics.arcade.overlap(bullets, enemies, this.collision, null, this);
     },
     
     shoot: function () {
@@ -76,6 +78,12 @@ var Game = {
         enem.body.velocity.y = 100;
         enem.checkWorldBounds = true;
         enem.outOfBoundsKill = true;
+    },
+    
+    collision: function (bullets, enemies) {
+        bullets.kill();
+        enemies.kill();
+    
     }
     
     
