@@ -31,7 +31,7 @@ var Game = {
         game.physics.arcade.enable(flappy);
         flappy.body.gravity.y = 1200;
         // jump with the mouse
-        jump = game.input.onTap.add(this.jump, this);
+        jump = game.input.onDown.add(this.jump, this);
         
         timer = game.time.events.loop(1500, this.createColumn, this);
         
@@ -41,13 +41,16 @@ var Game = {
         // conditions to lose
         if (flappy.inWorld == false){
             
-            // reset the game --> sent to GameOver
+            this.state.start('GameOver');
         }
         else if (flappy.position.y > 460){
-            // reset the game
+            flappy.alive = false;
+            this.state.start('GameOver');
+            
         }
         else {
             bg.tilePosition.x -= 1;
+            game.physics.arcade.overlap(flappy, tubes, this.touchTube, null, this);
         }
         
         flappy.animations.play('fly');
@@ -59,9 +62,11 @@ var Game = {
     },
     
     jump: function () {
-        flappy.body.velocity.y = -350;
-        // this is the animation when flappy jump
-        game.add.tween(flappy).to({angle:-20}, 100).start();
+        if (flappy.alive == true){
+            flappy.body.velocity.y = -350;
+            // this is the animation when flappy jump
+            game.add.tween(flappy).to({angle:-20}, 100).start();
+        }
     },
     
     createColumn: function () {
@@ -82,6 +87,16 @@ var Game = {
         tube.body.velocity.x = -180;
         tube.checkWorldBounds = true;
         tube.outOfBoundsKill = true;
+    },
+    
+    touchTube: function () {
+        if (flappy.alive == false)
+            return;
+        flappy.alive = false;
+        game.time.events.remove(timer);
+        tubes.forEachAlive(function(t){
+            t.body.velocity.x = 0;
+        }, this);
     }
     
 };
