@@ -3,12 +3,16 @@ var tubes;
 var flappy;
 var jump;
 var timer;
+var sound;
+var points;
+var txtPoints;
 var Game = {
     
     preload: function () {
         game.load.image('bg', 'img/bg.jpeg');
         game.load.spritesheet('birds', 'img/pajaros.png', 43, 30);
         game.load.image('tube', 'img/tubo.png');
+        game.load.audio('audio', ['audio/FF7BossBattlePiano_byTannerHelland.ogg']);
         
         game.forceSingleUpdate = true;
     },
@@ -32,8 +36,12 @@ var Game = {
         flappy.body.gravity.y = 1200;
         // jump with the mouse
         jump = game.input.onDown.add(this.jump, this);
-        
+        sound = game.add.audio('audio');
+        sound.play();
         timer = game.time.events.loop(1500, this.createColumn, this);
+        
+        points = -1;
+        txtPoints = game.add.text(20, 20, '0', {font: '30px arial', fill:'#FFF'});
         
     },
     
@@ -42,6 +50,7 @@ var Game = {
         if (flappy.inWorld == false){
             
             this.state.start('GameOver');
+            sound.pause();
         }
         else if (flappy.position.y > 460){
             flappy.alive = false;
@@ -77,12 +86,14 @@ var Game = {
                 this.createTube(370, i*55+20);
             }
         }
+        
+        points += 1;
+        txtPoints.text = points;
     
     },
     
     createTube: function (x, y) {
         var tube = tubes.getFirstDead();
-        
         tube.reset(x, y);
         tube.body.velocity.x = -180;
         tube.checkWorldBounds = true;
