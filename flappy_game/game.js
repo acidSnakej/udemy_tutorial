@@ -2,6 +2,7 @@ var bg;
 var tubes;
 var flappy;
 var jump;
+var timer;
 var Game = {
     
     preload: function () {
@@ -32,11 +33,23 @@ var Game = {
         // jump with the mouse
         jump = game.input.onTap.add(this.jump, this);
         
+        timer = game.time.events.loop(1500, this.createColumn, this);
+        
     },
     
     update: function () {
+        // conditions to lose
+        if (flappy.inWorld == false){
+            
+            // reset the game --> sent to GameOver
+        }
+        else if (flappy.position.y > 460){
+            // reset the game
+        }
+        else {
+            bg.tilePosition.x -= 1;
+        }
         
-        bg.tilePosition.x -= 1;
         flappy.animations.play('fly');
         // animation when flappy is falling
         if (flappy.angle < 20) {
@@ -49,6 +62,26 @@ var Game = {
         flappy.body.velocity.y = -350;
         // this is the animation when flappy jump
         game.add.tween(flappy).to({angle:-20}, 100).start();
+    },
+    
+    createColumn: function () {
+        var hole = Math.floor(Math.random()*5)+1;
+        
+        for ( var i = 0; i < 8; i++){
+            if ( i != hole && i != hole+1){
+                this.createTube(370, i*55+20);
+            }
+        }
+    
+    },
+    
+    createTube: function (x, y) {
+        var tube = tubes.getFirstDead();
+        
+        tube.reset(x, y);
+        tube.body.velocity.x = -180;
+        tube.checkWorldBounds = true;
+        tube.outOfBoundsKill = true;
     }
     
 };
